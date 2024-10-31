@@ -1,6 +1,8 @@
 from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
 
 information = """
     Karl Marx (German: [maʁks]; 5 May 1818 – 14 March 1883) was a German-born philosopher, political theorist, economist, historian, sociologist, journalist, and revolutionary socialist. His best-known works are the 1848 pamphlet The Communist Manifesto (with Friedrich Engels) and his three-volume Das Kapital (1867–1894); the latter employs his critical approach of historical materialism in an analysis of capitalism, in the culmination of his intellectual endeavours. Marx's ideas and their subsequent development, collectively known as Marxism, have had enormous influence on modern intellectual, economic and political history.
@@ -26,9 +28,10 @@ if __name__ == "__main__":
         input_variables="information", template=summary_template
     )
 
-    llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
+    # llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
+    llm = ChatOllama(temperature=0, model="mistral")
 
-    chain = summary_prompt_template | llm
+    chain = summary_prompt_template | llm | StrOutputParser()
 
     res = chain.invoke(input={"information": information})
 
